@@ -67,7 +67,7 @@ def wrap_future_call(grpc_fut, loop, executor=None):
     copy_members(grpc_fut, fut_,
                  ['is_active',
                   'time_remaining'])
-    @functools(grpc_fut.add_callback)
+    @functools.wraps(grpc_fut.add_callback)
     def _add_callback(callback):
         grpc_fut.add_callback(wrap_callback(callback, loop))
     fut_.add_callback = _add_callback
@@ -99,7 +99,7 @@ class WrappedIterator(object):
                      ['is_active',
                       'time_remaining',
                       'cancel'])
-        @functools(grpc_iterator.add_callback)
+        @functools.wraps(grpc_iterator.add_callback)
         def _add_callback(callback):
             grpc_iterator.add_callback(wrap_callback(callback, loop))
         self.add_callback = _add_callback
@@ -194,16 +194,4 @@ class WrappedAsyncIterator(object):
     def close(self):
         self._loop.call_soon_threadsafe(functools.partial(asyncio.ensure_future, self._async_iter.aclose(), loop=self._loop))
         self._async_iter = None
-
-
-class WrappedObject(object):
-    def __init__(self, _obj):
-        self._obj = _obj
-    
-    def __getattr__(self, key):
-        return getattr(self._obj, key)
-    
-    def __dir__(self):
-        return list(set(object.__dir__(self)).union(dir(self._obj)))
-
 
