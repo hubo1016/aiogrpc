@@ -131,7 +131,6 @@ class WrappedIterator(object):
     def __del__(self):
         if self._iterator is not None:
             self._iterator.cancel()
-            self._iterator.close()
             self._iterator = None
         if self._next_future is not None:
             self._next_future.cancel()
