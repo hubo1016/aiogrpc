@@ -76,6 +76,23 @@ class Test(unittest.TestCase):
                     break
         self.assertEqual(await r.code(), aiogrpc.StatusCode.CANCELLED)
         self.assertEqual(r.is_active(), False)
+        r = self.stub.StreamMethod(StreamRequest(name='test1', count=4), standalone_pool=True)
+        count = 0
+        async for v in r:
+            self.assertEqual(v.message, 'test1')
+            count += 1
+        self.assertEqual(count, 4)
+        self.assertEqual(r.is_active(), False)
+        self.assertEqual(await r.code(), aiogrpc.StatusCode.OK)
+        async with self.stub.StreamMethod.with_scope(StreamRequest(name='test1', count=4), standalone_pool=True) as r:
+            count = 0
+            async for v in r:
+                self.assertEqual(v.message, 'test1')
+                count += 1
+                if count >= 2:
+                    break
+        self.assertEqual(await r.code(), aiogrpc.StatusCode.CANCELLED)
+        self.assertEqual(r.is_active(), False)
 
     @asynctest
     async def testStreamUnary(self):

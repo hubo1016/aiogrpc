@@ -125,7 +125,8 @@ class _UnaryStreamMultiCallable(object):
                                       self._executor,
                                       stream_executor)
     
-    def with_scope(self, request, timeout=None, metadata=None, credentials=None):
+    def with_scope(self, request, timeout=None, metadata=None, credentials=None,
+                        *, standalone_pool = None):
         """
         Return an ASYNC context manager to ensure the call is closed outside the scope::
         
@@ -133,7 +134,7 @@ class _UnaryStreamMultiCallable(object):
                 async for i in iter:
                     ...
         """
-        return _utils.IteratorScope(self(request, timeout, metadata, credentials))
+        return _utils.IteratorScope(self(request, timeout, metadata, credentials, standalone_pool=standalone_pool))
 
 
 class _StreamUnaryMultiCallable(object):
@@ -294,7 +295,8 @@ class _StreamStreamMultiCallable(object):
         return r
 
 
-    def with_scope(self, request_iterator, timeout=None, metadata=None, credentials=None):
+    def with_scope(self, request_iterator, timeout=None, metadata=None, credentials=None,
+                   *, standalone_pool = None):
         """
         Return an ASYNC context manager to ensure the call is closed outside the scope::
         
@@ -302,7 +304,8 @@ class _StreamStreamMultiCallable(object):
                 async for i in iter:
                     ...
         """
-        return _utils.IteratorScope(self(request_iterator, timeout, metadata, credentials))
+        return _utils.IteratorScope(self(request_iterator, timeout, metadata, credentials,
+                                         standalone_pool=standalone_pool))
 
 
 class Channel(_grpc.Channel):

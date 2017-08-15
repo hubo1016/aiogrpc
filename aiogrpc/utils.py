@@ -143,8 +143,9 @@ class WrappedIterator(object):
         if self._next_future is not None:
             self._next_future.cancel()
             self._next_future = None
-        if not self._shared_executor:
+        if not self._shared_executor and self._stream_executor is not None:
             self._stream_executor.shutdown()
+            self._stream_executor = None
 
     async def aclose(self):
         self.__del__()
