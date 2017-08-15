@@ -53,7 +53,7 @@ def signal_handler(sig_num, frame):
     raise QuitException
 
 
-def create_server(listen_addrs=['localhost:9901']):
+def create_server(listen_addrs=['127.0.0.1:9901']):
     s = server(futures.ThreadPoolExecutor(max_workers=128))
     add_TestServiceServicer_to_server(TestServer(), s)
     for listen_addr in listen_addrs:
@@ -61,7 +61,7 @@ def create_server(listen_addrs=['localhost:9901']):
     return s
     
 
-def main(listen_addrs=['localhost:9901']):
+def main(listen_addrs=['127.0.0.1:9901']):
     s = create_server(listen_addrs)
     print("Server created on", listen_addrs)
     s.start()

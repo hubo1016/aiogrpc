@@ -21,7 +21,7 @@ class Test(unittest.TestCase):
 
     def setUp(self):
         self.loop = asyncio.get_event_loop()
-        self.channel = aiogrpc.insecure_channel('localhost:9901', loop=self.loop)
+        self.channel = aiogrpc.insecure_channel('ipv4:///127.0.0.1:9901', loop=self.loop)
         self.stub = TestServiceStub(self.channel)
 
     def tearDown(self):
@@ -166,10 +166,29 @@ class Test(unittest.TestCase):
         self.assertEqual(await result.code(), aiogrpc.StatusCode.CANCELLED)
         self.assertEqual(result.is_active(), False)
         
+    @asynctest
+    async def testBalancing(self):
+        s1 = create_server(['127.0.0.1:9902'])
+        s2 = create_server(['127.0.0.1:9903'])
+        self.channel = aiogrpc.insecure_channel('ipv4:///127.0.0.1:9902,127.0.0.1:9903', loop=self.loop)
+        self.stub = TestServiceStub(self.channel)
+        s1.start()
+        try:
+            result = await self.stub.NormalMethod(StandardRequest(name='test1'))
+            self.assertEqual(result.message, 'test1')
+        finally:
+            s1.stop(None)
+        s2.start()
+        try:
+            result = await self.stub.NormalMethod(StandardRequest(name='test1'))
+            self.assertEqual(result.message, 'test1')
+        finally:
+            s1.stop(None)
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
-    s = create_server(['localhost:9901'])
+    s = create_server(['127.0.0.1:9901'])
     s.start()
     try:
         unittest.main()

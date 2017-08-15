@@ -379,3 +379,56 @@ class Channel(_grpc.Channel):
             self._loop,
             self._executor,
             self._standalone_pool)
+
+def channel_ready_future(channel):
+    """Creates a Future that tracks when a Channel is ready.
+
+  Cancelling the Future does not affect the channel's state machine.
+  It merely decouples the Future from channel state machine.
+
+  Args:
+    channel: A Channel object.
+
+  Returns:
+    A Future object that matures when the channel connectivity is
+    ChannelConnectivity.READY.
+  """
+    fut = channel._loop.create_future()
+    def _set_result(state):
+        if not fut.done() and state is _grpc.ChannelConnectivity.READY:
+            fut.set_result(None)
+    fut.add_done_callback(lambda f: channel.unsubscribe(_set_result))
+    channel.subscribe(_set_result, try_to_connect=True)
+    return fut
+
+
+def insecure_channel(target, options=None, *, loop=None, executor=None,
+                    standalone_pool_for_streaming=False):
+    """Creates an insecure Channel to a server.
+
+  Args:
+    target: The server address
+    options: An optional list of key-value pairs (channel args in gRPC runtime)
+    to configure the channel.
+
+  Returns:
+    A Channel object.
+  """
+    return Channel(_grpc.insecure_channel(target, options), loop, executor, standalone_pool_for_streaming)
+
+
+def secure_channel(target, credentials, options=None, *, loop=None, executor=None,
+                   standalone_pool_for_streaming=False):
+    """Creates a secure Channel to a server.
+
+  Args:
+    target: The server address.
+    credentials: A ChannelCredentials instance.
+    options: An optional list of key-value pairs (channel args in gRPC runtime)
+    to configure the channel.
+
+  Returns:
+    A Channel object.
+  """
+    return Channel(_grpc.secure_channel(target, credentials, options),
+                   loop, executor, standalone_pool_for_streaming)
