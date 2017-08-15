@@ -37,7 +37,6 @@ setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'janus>=0.3.0',
         'grpcio>=1.4.0'
     ]
 )
