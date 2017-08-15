@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+// Test service
+service TestService {
+  // UnaryUnary
+  rpc NormalMethod (StandardRequest) returns (StandardReply) {}
+  // UnaryStream
+  rpc StreamMethod (StreamRequest) returns (stream StandardReply) {}
+  // StreamUnary
+  rpc StreamInputMethod (stream StandardRequest) returns (StreamReply) {}
+  // StreamStream
+  rpc StreamStreamMethod (stream StandardRequest) returns (stream StandardReply) {}
+  // Delayed
+  rpc DelayedMethod (StandardRequest) returns (StandardReply) {}
+  // Exception
+  rpc ExceptionMethod (StandardRequest) returns (StandardReply) {}
+  // Delayed Stream
+  rpc DelayedStream (StreamRequest) returns (stream StandardReply) {}
+}
+
+// The request message containing the user's name.
+message StandardRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message StandardReply {
+  string message = 1;
+}
+
+message StreamRequest {
+  string name = 1;
+  int32 count = 2;
+}
+
+message StreamReply {
+  string message = 1;
+  int32 count = 2;
+}

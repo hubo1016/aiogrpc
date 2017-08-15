@@ -7,6 +7,7 @@ import grpc as _grpc
 import aiogrpc.utils as _utils
 import asyncio as _asyncio
 from concurrent.futures import ThreadPoolExecutor as _ThreadPoolExecutor
+import functools
 
 
 class _UnaryUnaryMultiCallable(object):
@@ -271,10 +272,11 @@ class _StreamStreamMultiCallable(object):
             stream_executor = _ThreadPoolExecutor(1)
         else:
             stream_executor = None
-        return _utils.WrappedIterator(
+        input_iterator = _utils.WrappedAsyncIterator(request_iterator,
+                                                    self._loop)
+        r = _utils.WrappedIterator(
                     self._inner(
-                        _utils.WrappedAsyncIterator(request_iterator,
-                                                    self._loop),
+                        input_iterator,
                         timeout,
                         metadata,
                         credentials
@@ -282,6 +284,14 @@ class _StreamStreamMultiCallable(object):
                     self._loop,
                     self._executor,
                     stream_executor)
+        # Make sure the input iterator exits, or the thread may block indefinitely
+        old_cancel = r.cancel
+        @functools.wraps(r.cancel)
+        def _cancel():
+            old_cancel()
+            input_iterator.cancel()
+        r.cancel = _cancel
+        return r
 
 
     def with_scope(self, request_iterator, timeout=None, metadata=None, credentials=None):
