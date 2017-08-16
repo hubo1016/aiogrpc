@@ -51,7 +51,7 @@ class Test(unittest.TestCase):
         
     @asynctest
     async def testCancel(self):
-        fut = self.stub.NormalMethod.future(StandardRequest(name='test1'))
+        fut = self.stub.DelayedMethod.future(StandardRequest(name='test1'))
         self.assertEqual(fut.is_active(), True)
         fut.cancel()
         self.assertEqual(await fut.code(), aiogrpc.StatusCode.CANCELLED)
