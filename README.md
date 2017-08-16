@@ -1,4 +1,6 @@
 # aiogrpc
+[![Build Status](https://travis-ci.org/hubo1016/aiogrpc.svg?branch=master)](https://travis-ci.org/hubo1016/aiogrpc)
+[![PyPI](https://img.shields.io/pypi/v/aiogrpc.svg)](https://pypi.python.org/pypi/aiogrpc)
 asyncio wrapper for grpc.io. Currently, only client-side interfaces are supported.
 
 # Interfaces
@@ -30,3 +32,6 @@ aiogrpc has exactly the same interface as grpc.io (https://grpc.io/grpc/python/g
             ...
     ```
 
+# Copyright Notice
+All code are published under Apache 2.0 License
+Some code and docstrings are modified from grpc.io (https://grpc.io/grpc/python/grpc.html#module-grpc)
