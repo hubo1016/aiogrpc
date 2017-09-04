@@ -178,6 +178,10 @@ class WrappedAsyncIterator(object):
         return self
 
     async def _next(self):
+        if self._async_iter is None:
+            # An edge condition
+            self._q.put((None, True))
+            return
         if self._next_future is None:
             self._next_future = asyncio.ensure_future(self._async_iter.__anext__(), loop=self._loop)
         try:
