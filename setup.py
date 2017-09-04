@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-version = "0.1"
+version = "1.0"
 
 try:
     import pypandoc
@@ -20,7 +20,6 @@ setup(
     description="asyncio wrapper for grpc.io",
     license="Apache",
     classifiers=[
-        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
         'Intended Audience :: Developers',
         'Framework :: AsyncIO',
