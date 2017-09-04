@@ -231,9 +231,13 @@ class WrappedAsyncIterator(object):
                 self._q.put((None, True))
                 self._async_iter = None
 
-    def cancel(self):
-        exc = CancelledError()
+    def cancel(self, exception=True):
+        if exception:
+            exc = CancelledError()
+        else:
+            exc = None
         if not self._stop_future.done():
             self._stop_future.set_result(exc)
-        # Ensure __next__ ends
+        # Ensure __next__ ends. Sometimes the loop is already closing, so the exit result may not be written
+        # to the queue
         self._q.put((exc, True))

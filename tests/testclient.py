@@ -165,6 +165,11 @@ class Test(unittest.TestCase):
             await result.__anext__()
         self.assertEqual(await result.code(), aiogrpc.StatusCode.CANCELLED)
         self.assertEqual(result.is_active(), False)
+        q = asyncio.Queue()
+        result = self.stub.StreamStreamMethod(test_input(q))
+        await q.put(None)
+        with self.assertRaises(StopAsyncIteration):
+            await result.__anext__()
         
     @asynctest
     async def testBalancing(self):

@@ -290,7 +290,7 @@ class _StreamStreamMultiCallable(object):
         @functools.wraps(r.cancel)
         def _cancel():
             old_cancel()
-            input_iterator.cancel()
+            input_iterator.cancel(False)
         r.cancel = _cancel
         return r
 
