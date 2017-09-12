@@ -123,7 +123,11 @@ class WrappedIterator(object):
         try:
             return next(self._iterator)
         except StopIteration:
+            self.cancel()
             raise StopAsyncIteration
+        except Exception:
+            self.cancel()
+            raise
     
     async def __anext__(self):
         if self._next_future is None:
@@ -240,8 +244,11 @@ class WrappedAsyncIterator(object):
             exc = CancelledError()
         else:
             exc = None
-        if not self._stop_future.done():
-            self._stop_future.set_result(exc)
+        def _set_result():
+            if not self._stop_future.done():
+                self._stop_future.set_result(exc)
         # Ensure __next__ ends. Sometimes the loop is already closing, so the exit result may not be written
         # to the queue
         self._q.put((exc, True))
+        if not self._loop.is_closed():
+            self._loop.call_soon_threadsafe(_set_result)
