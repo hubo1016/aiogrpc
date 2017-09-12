@@ -275,23 +275,21 @@ class _StreamStreamMultiCallable(object):
             stream_executor = None
         input_iterator = _utils.WrappedAsyncIterator(request_iterator,
                                                     self._loop)
-        r = _utils.WrappedIterator(
-                    self._inner(
+        grpc_iterator = self._inner(
                         input_iterator,
                         timeout,
                         metadata,
                         credentials
-                    ),
+                    )
+        r = _utils.WrappedIterator(
+                    grpc_iterator,
                     self._loop,
                     self._executor,
                     stream_executor)
         # Make sure the input iterator exits, or the thread may block indefinitely
-        old_cancel = r.cancel
-        @functools.wraps(r.cancel)
-        def _cancel():
-            old_cancel()
+        def _end_callback():
             input_iterator.cancel(False)
-        r.cancel = _cancel
+        grpc_iterator.add_callback(_end_callback)
         return r
 
 

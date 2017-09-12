@@ -123,10 +123,8 @@ class WrappedIterator(object):
         try:
             return next(self._iterator)
         except StopIteration:
-            self.cancel()
             raise StopAsyncIteration
         except Exception:
-            self.cancel()
             raise
     
     async def __anext__(self):
