@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-version = "1.1"
+version = "1.2"
 
 try:
     import pypandoc
