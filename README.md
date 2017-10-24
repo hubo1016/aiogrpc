@@ -26,10 +26,10 @@ aiogrpc has exactly the same interface as grpc.io (https://grpc.io/grpc/python/g
     channel = insecure_channel('ipv4:///127.0.0.1:8080')
     mystub = MyStub(channel)
     
-    async test_call():
+    async def test_call():
         return await mystub.mymethod(...)
     
-    async test_call_stream():
+    async def test_call_stream():
         async for v in mystub.my_stream_method(...):
             ...
     ```
