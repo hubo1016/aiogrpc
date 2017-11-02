@@ -37,7 +37,7 @@ class TestServer(TestServiceServicer):
     def ExceptionMethod(self, request, context):
         context.set_code(StatusCode.PERMISSION_DENIED)
         context.set_details('Permission denied')
-        raise ValueError("TestException")
+        raise ValueError("Testing raising exception from the server (A designed test case)")
     
     def DelayedStream(self, request, context):
         for i in range(0, request.count):

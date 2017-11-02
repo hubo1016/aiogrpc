@@ -116,7 +116,7 @@ class Test(unittest.TestCase):
         async def test_input2():
             yield StandardRequest(name='test1')
             yield StandardRequest(name='test2')
-            raise ValueError('testerror')
+            raise ValueError('Testing raising exception from client side (A designed test case)')
         with self.assertRaises(aiogrpc.RpcError):
             result = await self.stub.StreamInputMethod(test_input2())
 
