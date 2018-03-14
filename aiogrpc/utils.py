@@ -12,7 +12,8 @@ from asyncio.futures import CancelledError
 def wrap_callback(callback, loop):
     @functools.wraps(callback)
     def _callback(*args, **kwargs):
-        loop.call_soon_threadsafe(functools.partial(callback, *args, **kwargs))
+        if not loop.is_closed():
+            loop.call_soon_threadsafe(functools.partial(callback, *args, **kwargs))
     return _callback
 
 
@@ -48,7 +49,8 @@ def wrap_future(grpc_fut, loop):
             grpc_fut.cancel()
 
     def _call_set_state(grpc_fut):
-        loop.call_soon_threadsafe(_set_state, grpc_fut, fut_)
+        if not loop.is_closed():
+            loop.call_soon_threadsafe(_set_state, grpc_fut, fut_)
 
     fut_.add_done_callback(_call_check_cancel)
     grpc_fut.add_done_callback(_call_set_state)
@@ -143,7 +145,8 @@ class WrappedIterator(object):
             self.cancel()
             self._iterator = None
         if self._next_future is not None:
-            self._next_future.cancel()
+            if not self._loop.is_closed():
+                self._loop.call_soon_threadsafe(lambda: self._next_future.cancel())
             self._next_future = None
         if not self._shared_executor and self._stream_executor is not None:
             self._stream_executor.shutdown()
@@ -213,7 +216,8 @@ class WrappedAsyncIterator(object):
         try:
             r, is_exc = self._q.get_nowait()
         except queue.Empty:
-            self._loop.call_soon_threadsafe(functools.partial(asyncio.ensure_future, self._next(), loop=self._loop))
+            if not self._loop.is_closed():
+                self._loop.call_soon_threadsafe(functools.partial(asyncio.ensure_future, self._next(), loop=self._loop))
             r, is_exc = self._q.get()
         if is_exc:
             if r is None:
@@ -231,7 +235,8 @@ class WrappedAsyncIterator(object):
                     self._stop_future.set_result(None)
                 await self._async_iter.aclose()
             try:
-                self._loop.call_soon_threadsafe(functools.partial(asyncio.ensure_future, async_close(), loop=self._loop))
+                if not self._loop.is_closed():
+                    self._loop.call_soon_threadsafe(functools.partial(asyncio.ensure_future, async_close(), loop=self._loop))
             finally:
                 # Ensure __next__ ends
                 self._q.put((None, True))
