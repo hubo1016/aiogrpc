@@ -146,7 +146,7 @@ class WrappedIterator(object):
             self._iterator = None
         if self._next_future is not None:
             if not self._loop.is_closed():
-                self._loop.call_soon_threadsafe(lambda: self._next_future.cancel())
+                self._loop.call_soon_threadsafe(lambda f=self._next_future: f.cancel())
             self._next_future = None
         if not self._shared_executor and self._stream_executor is not None:
             self._stream_executor.shutdown()
