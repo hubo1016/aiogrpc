@@ -12,6 +12,7 @@ aiogrpc has exactly the same interface as grpc.io (https://grpc.io/grpc/python/g
 - All futures are asyncio futures (i.e. awaitable)
 - All blocking interfaces (`__call__` for unary methods, `code()`, `details()`, ...) become coroutines
 - Stream input/output are async iterators
+- `close()` method returns a asyncio future (use `await channel.close()`) (*since v1.4*)
 
 # Usage
 
