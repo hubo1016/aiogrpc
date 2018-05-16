@@ -378,6 +378,14 @@ class Channel(_grpc.Channel):
             self._executor,
             self._standalone_pool)
 
+    def close(self):
+        """
+        This method returns a future, so you should use `await channel.close()`, but call
+        `channel.close()` also close it (but did not wait for the closing)
+        """
+        return self._loop.run_in_executor(self._executor, self._channel.close)
+
+
 def channel_ready_future(channel):
     """Creates a Future that tracks when a Channel is ready.
 

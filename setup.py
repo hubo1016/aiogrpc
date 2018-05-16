@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-version = "1.3"
+version = "1.4"
 
 try:
     import pypandoc
@@ -36,6 +36,6 @@ setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'grpcio>=1.4.0'
+        'grpcio>=1.12.0'
     ]
 )

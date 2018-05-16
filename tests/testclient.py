@@ -25,6 +25,7 @@ class Test(unittest.TestCase):
         self.stub = TestServiceStub(self.channel)
 
     def tearDown(self):
+        self.loop.run_until_complete(self.channel.close())
         del self.channel
         del self.stub
 
