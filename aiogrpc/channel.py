@@ -328,7 +328,7 @@ class Channel(_grpc.Channel):
         self._subscribe_map = {}
 
     async def __aenter__(self):
-        return
+        return self
 
     async def __aexit__(self, exc_type, exc, tb):
         await self.close()
