@@ -30,6 +30,11 @@ class Test(unittest.TestCase):
         del self.stub
 
     @asynctest
+    async def testAsyncCtxManager(self):
+        async with aiogrpc.insecure_channel('ipv4:///127.0.0.1:9901', loop=self.loop) as _channel:
+            await aiogrpc.channel_ready_future(_channel)
+
+    @asynctest
     async def testConnect(self):
         await aiogrpc.channel_ready_future(self.channel)
 
