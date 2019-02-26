@@ -327,6 +327,12 @@ class Channel(_grpc.Channel):
         self._standalone_pool = standalone_pool_for_streaming
         self._subscribe_map = {}
 
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb):
+        await self.close()
+
     def subscribe(self, callback, try_to_connect=None):
         if callback in self._subscribe_map:
             wrapped_callback = self._subscribe_map[callback]
