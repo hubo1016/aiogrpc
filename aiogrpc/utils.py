@@ -7,7 +7,7 @@ Created on 2017/8/14
 import asyncio
 import functools
 import queue
-from asyncio.futures import CancelledError
+from asyncio import CancelledError
 
 def wrap_callback(callback, loop):
     @functools.wraps(callback)
