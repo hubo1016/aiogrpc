@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-version = "1.6"
+version = "1.7"
 
 try:
     import pypandoc
