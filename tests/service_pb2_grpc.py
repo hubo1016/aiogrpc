@@ -5,144 +5,294 @@ import service_pb2 as service__pb2
 
 
 class TestServiceStub(object):
-  """Test service
-  """
-
-  def __init__(self, channel):
-    """Constructor.
-
-    Args:
-      channel: A grpc.Channel.
+    """Test service
     """
-    self.NormalMethod = channel.unary_unary(
-        '/TestService/NormalMethod',
-        request_serializer=service__pb2.StandardRequest.SerializeToString,
-        response_deserializer=service__pb2.StandardReply.FromString,
-        )
-    self.StreamMethod = channel.unary_stream(
-        '/TestService/StreamMethod',
-        request_serializer=service__pb2.StreamRequest.SerializeToString,
-        response_deserializer=service__pb2.StandardReply.FromString,
-        )
-    self.StreamInputMethod = channel.stream_unary(
-        '/TestService/StreamInputMethod',
-        request_serializer=service__pb2.StandardRequest.SerializeToString,
-        response_deserializer=service__pb2.StreamReply.FromString,
-        )
-    self.StreamStreamMethod = channel.stream_stream(
-        '/TestService/StreamStreamMethod',
-        request_serializer=service__pb2.StandardRequest.SerializeToString,
-        response_deserializer=service__pb2.StandardReply.FromString,
-        )
-    self.DelayedMethod = channel.unary_unary(
-        '/TestService/DelayedMethod',
-        request_serializer=service__pb2.StandardRequest.SerializeToString,
-        response_deserializer=service__pb2.StandardReply.FromString,
-        )
-    self.ExceptionMethod = channel.unary_unary(
-        '/TestService/ExceptionMethod',
-        request_serializer=service__pb2.StandardRequest.SerializeToString,
-        response_deserializer=service__pb2.StandardReply.FromString,
-        )
-    self.DelayedStream = channel.unary_stream(
-        '/TestService/DelayedStream',
-        request_serializer=service__pb2.StreamRequest.SerializeToString,
-        response_deserializer=service__pb2.StandardReply.FromString,
-        )
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.NormalMethod = channel.unary_unary(
+                '/TestService/NormalMethod',
+                request_serializer=service__pb2.StandardRequest.SerializeToString,
+                response_deserializer=service__pb2.StandardReply.FromString,
+                )
+        self.StreamMethod = channel.unary_stream(
+                '/TestService/StreamMethod',
+                request_serializer=service__pb2.StreamRequest.SerializeToString,
+                response_deserializer=service__pb2.StandardReply.FromString,
+                )
+        self.StreamInputMethod = channel.stream_unary(
+                '/TestService/StreamInputMethod',
+                request_serializer=service__pb2.StandardRequest.SerializeToString,
+                response_deserializer=service__pb2.StreamReply.FromString,
+                )
+        self.StreamStreamMethod = channel.stream_stream(
+                '/TestService/StreamStreamMethod',
+                request_serializer=service__pb2.StandardRequest.SerializeToString,
+                response_deserializer=service__pb2.StandardReply.FromString,
+                )
+        self.InfiniteStreamStreamMethod = channel.stream_stream(
+                '/TestService/InfiniteStreamStreamMethod',
+                request_serializer=service__pb2.StandardRequest.SerializeToString,
+                response_deserializer=service__pb2.StandardReply.FromString,
+                )
+        self.DelayedMethod = channel.unary_unary(
+                '/TestService/DelayedMethod',
+                request_serializer=service__pb2.StandardRequest.SerializeToString,
+                response_deserializer=service__pb2.StandardReply.FromString,
+                )
+        self.ExceptionMethod = channel.unary_unary(
+                '/TestService/ExceptionMethod',
+                request_serializer=service__pb2.StandardRequest.SerializeToString,
+                response_deserializer=service__pb2.StandardReply.FromString,
+                )
+        self.DelayedStream = channel.unary_stream(
+                '/TestService/DelayedStream',
+                request_serializer=service__pb2.StreamRequest.SerializeToString,
+                response_deserializer=service__pb2.StandardReply.FromString,
+                )
 
 
 class TestServiceServicer(object):
-  """Test service
-  """
-
-  def NormalMethod(self, request, context):
-    """UnaryUnary
+    """Test service
     """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
 
-  def StreamMethod(self, request, context):
-    """UnaryStream
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
+    def NormalMethod(self, request, context):
+        """UnaryUnary
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
-  def StreamInputMethod(self, request_iterator, context):
-    """StreamUnary
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
+    def StreamMethod(self, request, context):
+        """UnaryStream
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
-  def StreamStreamMethod(self, request_iterator, context):
-    """StreamStream
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
+    def StreamInputMethod(self, request_iterator, context):
+        """StreamUnary
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
-  def DelayedMethod(self, request, context):
-    """Delayed
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
+    def StreamStreamMethod(self, request_iterator, context):
+        """StreamStream
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
-  def ExceptionMethod(self, request, context):
-    """Exception
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
+    def InfiniteStreamStreamMethod(self, request_iterator, context):
+        """Missing associated documentation comment in .proto file"""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
-  def DelayedStream(self, request, context):
-    """Delayed Stream
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
+    def DelayedMethod(self, request, context):
+        """Delayed
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ExceptionMethod(self, request, context):
+        """Exception
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DelayedStream(self, request, context):
+        """Delayed Stream
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
 
 def add_TestServiceServicer_to_server(servicer, server):
-  rpc_method_handlers = {
-      'NormalMethod': grpc.unary_unary_rpc_method_handler(
-          servicer.NormalMethod,
-          request_deserializer=service__pb2.StandardRequest.FromString,
-          response_serializer=service__pb2.StandardReply.SerializeToString,
-      ),
-      'StreamMethod': grpc.unary_stream_rpc_method_handler(
-          servicer.StreamMethod,
-          request_deserializer=service__pb2.StreamRequest.FromString,
-          response_serializer=service__pb2.StandardReply.SerializeToString,
-      ),
-      'StreamInputMethod': grpc.stream_unary_rpc_method_handler(
-          servicer.StreamInputMethod,
-          request_deserializer=service__pb2.StandardRequest.FromString,
-          response_serializer=service__pb2.StreamReply.SerializeToString,
-      ),
-      'StreamStreamMethod': grpc.stream_stream_rpc_method_handler(
-          servicer.StreamStreamMethod,
-          request_deserializer=service__pb2.StandardRequest.FromString,
-          response_serializer=service__pb2.StandardReply.SerializeToString,
-      ),
-      'DelayedMethod': grpc.unary_unary_rpc_method_handler(
-          servicer.DelayedMethod,
-          request_deserializer=service__pb2.StandardRequest.FromString,
-          response_serializer=service__pb2.StandardReply.SerializeToString,
-      ),
-      'ExceptionMethod': grpc.unary_unary_rpc_method_handler(
-          servicer.ExceptionMethod,
-          request_deserializer=service__pb2.StandardRequest.FromString,
-          response_serializer=service__pb2.StandardReply.SerializeToString,
-      ),
-      'DelayedStream': grpc.unary_stream_rpc_method_handler(
-          servicer.DelayedStream,
-          request_deserializer=service__pb2.StreamRequest.FromString,
-          response_serializer=service__pb2.StandardReply.SerializeToString,
-      ),
-  }
-  generic_handler = grpc.method_handlers_generic_handler(
-      'TestService', rpc_method_handlers)
-  server.add_generic_rpc_handlers((generic_handler,))
+    rpc_method_handlers = {
+            'NormalMethod': grpc.unary_unary_rpc_method_handler(
+                    servicer.NormalMethod,
+                    request_deserializer=service__pb2.StandardRequest.FromString,
+                    response_serializer=service__pb2.StandardReply.SerializeToString,
+            ),
+            'StreamMethod': grpc.unary_stream_rpc_method_handler(
+                    servicer.StreamMethod,
+                    request_deserializer=service__pb2.StreamRequest.FromString,
+                    response_serializer=service__pb2.StandardReply.SerializeToString,
+            ),
+            'StreamInputMethod': grpc.stream_unary_rpc_method_handler(
+                    servicer.StreamInputMethod,
+                    request_deserializer=service__pb2.StandardRequest.FromString,
+                    response_serializer=service__pb2.StreamReply.SerializeToString,
+            ),
+            'StreamStreamMethod': grpc.stream_stream_rpc_method_handler(
+                    servicer.StreamStreamMethod,
+                    request_deserializer=service__pb2.StandardRequest.FromString,
+                    response_serializer=service__pb2.StandardReply.SerializeToString,
+            ),
+            'InfiniteStreamStreamMethod': grpc.stream_stream_rpc_method_handler(
+                    servicer.InfiniteStreamStreamMethod,
+                    request_deserializer=service__pb2.StandardRequest.FromString,
+                    response_serializer=service__pb2.StandardReply.SerializeToString,
+            ),
+            'DelayedMethod': grpc.unary_unary_rpc_method_handler(
+                    servicer.DelayedMethod,
+                    request_deserializer=service__pb2.StandardRequest.FromString,
+                    response_serializer=service__pb2.StandardReply.SerializeToString,
+            ),
+            'ExceptionMethod': grpc.unary_unary_rpc_method_handler(
+                    servicer.ExceptionMethod,
+                    request_deserializer=service__pb2.StandardRequest.FromString,
+                    response_serializer=service__pb2.StandardReply.SerializeToString,
+            ),
+            'DelayedStream': grpc.unary_stream_rpc_method_handler(
+                    servicer.DelayedStream,
+                    request_deserializer=service__pb2.StreamRequest.FromString,
+                    response_serializer=service__pb2.StandardReply.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'TestService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+
+
+ # This class is part of an EXPERIMENTAL API.
+class TestService(object):
+    """Test service
+    """
+
+    @staticmethod
+    def NormalMethod(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/TestService/NormalMethod',
+            service__pb2.StandardRequest.SerializeToString,
+            service__pb2.StandardReply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def StreamMethod(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/TestService/StreamMethod',
+            service__pb2.StreamRequest.SerializeToString,
+            service__pb2.StandardReply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def StreamInputMethod(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_unary(request_iterator, target, '/TestService/StreamInputMethod',
+            service__pb2.StandardRequest.SerializeToString,
+            service__pb2.StreamReply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def StreamStreamMethod(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_stream(request_iterator, target, '/TestService/StreamStreamMethod',
+            service__pb2.StandardRequest.SerializeToString,
+            service__pb2.StandardReply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def InfiniteStreamStreamMethod(request_iterator,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.stream_stream(request_iterator, target, '/TestService/InfiniteStreamStreamMethod',
+            service__pb2.StandardRequest.SerializeToString,
+            service__pb2.StandardReply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DelayedMethod(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/TestService/DelayedMethod',
+            service__pb2.StandardRequest.SerializeToString,
+            service__pb2.StandardReply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ExceptionMethod(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/TestService/ExceptionMethod',
+            service__pb2.StandardRequest.SerializeToString,
+            service__pb2.StandardReply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DelayedStream(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/TestService/DelayedStream',
+            service__pb2.StreamRequest.SerializeToString,
+            service__pb2.StandardReply.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)

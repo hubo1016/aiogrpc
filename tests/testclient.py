@@ -54,7 +54,7 @@ class Test(unittest.TestCase):
         self.assertEqual((await fut).message, 'test3')
         self.assertEqual(fut.is_active(), False)
         self.assertEqual(fut.done(), True)
-        
+
     @asynctest
     async def testCancel(self):
         fut = self.stub.DelayedMethod.future(StandardRequest(name='test1'))
@@ -136,7 +136,7 @@ class Test(unittest.TestCase):
         self.assertIsInstance(fut.exception(), aiogrpc.RpcError)
         with self.assertRaises(aiogrpc.RpcError):
             await fut
-    
+
     @asynctest
     async def testStreamStream(self):
         async def test_input(q):
@@ -176,7 +176,29 @@ class Test(unittest.TestCase):
         await q.put(None)
         with self.assertRaises(StopAsyncIteration):
             await result.__anext__()
-        
+
+    @asynctest
+    async def testInfiniteStreamCancel(self):
+        async def test_input():
+            yield StandardRequest(name=f'test1')
+        q = asyncio.Queue()
+        result = self.stub.InfiniteStreamStreamMethod(test_input())
+
+        results = []
+        async def read_task(result):
+            async for x in result:
+                results.append(x.message)
+
+        loop = asyncio.get_event_loop()
+        task = loop.create_task(read_task(result))
+        await asyncio.sleep(0.2)
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            pass
+        self.assertEqual(results, ["test1"])
+
     @asynctest
     async def testBalancing(self):
         s1 = create_server(['127.0.0.1:9902'])

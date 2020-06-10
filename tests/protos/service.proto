@@ -10,6 +10,7 @@ service TestService {
   rpc StreamInputMethod (stream StandardRequest) returns (StreamReply) {}
   // StreamStream
   rpc StreamStreamMethod (stream StandardRequest) returns (stream StandardReply) {}
+  rpc InfiniteStreamStreamMethod (stream StandardRequest) returns (stream StandardReply) {}
   // Delayed
   rpc DelayedMethod (StandardRequest) returns (StandardReply) {}
   // Exception
