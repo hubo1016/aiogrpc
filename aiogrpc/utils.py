@@ -128,18 +128,18 @@ class WrappedIterator(object):
             raise StopAsyncIteration
         except Exception:
             raise
-    
+
     async def __anext__(self):
         if self._next_future is None:
             if self._iterator is None:
                 raise StopAsyncIteration
             self._next_future = self._loop.run_in_executor(self._stream_executor, self._next)
         try:
-            return await asyncio.shield(self._next_future, loop=self._loop)
+            return await asyncio.shield(self._next_future)
         finally:
             if self._next_future and self._next_future.done():
                 self._next_future = None
-    
+
     def __del__(self):
         if self._iterator is not None:
             self.cancel()
@@ -188,9 +188,9 @@ class WrappedAsyncIterator(object):
             self._q.put((None, True))
             return
         if self._next_future is None:
-            self._next_future = asyncio.ensure_future(self._async_iter.__anext__(), loop=self._loop)
+            self._next_future = asyncio.ensure_future(self._async_iter.__anext__())
         try:
-            done, _ = await asyncio.wait([self._stop_future, self._next_future], loop=self._loop,
+            done, _ = await asyncio.wait([self._stop_future, self._next_future],
                                    return_when=asyncio.FIRST_COMPLETED)
             if self._stop_future in done:
                 self._q.put((await self._stop_future, True))
@@ -217,7 +217,7 @@ class WrappedAsyncIterator(object):
             r, is_exc = self._q.get_nowait()
         except queue.Empty:
             if not self._loop.is_closed():
-                self._loop.call_soon_threadsafe(functools.partial(asyncio.ensure_future, self._next(), loop=self._loop))
+                self._loop.call_soon_threadsafe(functools.partial(asyncio.ensure_future, self._next()))
             r, is_exc = self._q.get()
         if is_exc:
             if r is None:
@@ -236,7 +236,7 @@ class WrappedAsyncIterator(object):
                 await self._async_iter.aclose()
             try:
                 if not self._loop.is_closed():
-                    self._loop.call_soon_threadsafe(functools.partial(asyncio.ensure_future, async_close(), loop=self._loop))
+                    self._loop.call_soon_threadsafe(functools.partial(asyncio.ensure_future, async_close()))
             finally:
                 # Ensure __next__ ends
                 self._q.put((None, True))
