@@ -143,6 +143,8 @@ class WrappedIterator(object):
             def cb(fut):
                 try:
                     fut.result()
+                except (StopAsyncIteration, StopIteration):
+                    pass
                 except grpc.RpcError as ex:
                     if ex.code() != grpc.StatusCode.CANCELLED:
                         logger.exception("__anext__ grpc exception")
