@@ -15,30 +15,37 @@ class TestServer(TestServiceServicer):
         context.set_code(StatusCode.OK)
         context.set_details('OK detail')
         return StandardReply(message=request.name)
-    
+
     def StreamInputMethod(self, request_iterator, context):
         count = 0
         for r in request_iterator:
             count += 1
         return StreamReply(message='stream', count=count)
-    
+
     def StreamMethod(self, request, context):
         for _ in range(0, request.count):
             yield StandardReply(message=request.name)
-    
+
     def StreamStreamMethod(self, request_iterator, context):
         for r in request_iterator:
             yield StandardReply(message=r.name)
 
+    def InfiniteStreamStreamMethod(self, request_iterator, context):
+        for r in request_iterator:
+            yield StandardReply(message=r.name)
+        while True:
+            time.sleep(1)
+            yield StandardReply(message="xxx")
+
     def DelayedMethod(self, request, context):
         time.sleep(1)
         return StandardReply(message=request.name)
-    
+
     def ExceptionMethod(self, request, context):
         context.set_code(StatusCode.PERMISSION_DENIED)
         context.set_details('Permission denied')
         raise ValueError("Testing raising exception from the server (A designed test case)")
-    
+
     def DelayedStream(self, request, context):
         for i in range(0, request.count):
             time.sleep(1)
@@ -59,7 +66,7 @@ def create_server(listen_addrs=['127.0.0.1:9901']):
     for listen_addr in listen_addrs:
         s.add_insecure_port(listen_addr)
     return s
-    
+
 
 def main(listen_addrs=['127.0.0.1:9901']):
     s = create_server(listen_addrs)

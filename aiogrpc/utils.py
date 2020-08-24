@@ -8,6 +8,11 @@ import asyncio
 import functools
 import queue
 from asyncio import CancelledError
+import logging
+import grpc
+
+logger = logging.getLogger(__name__)
+
 
 def wrap_callback(callback, loop):
     @functools.wraps(callback)
@@ -114,11 +119,11 @@ class WrappedIterator(object):
                       'trailing_metadata',
                       'code',
                       'details'],
-                     functools.partial(wrap_active_test, test=grpc_iterator.is_active, loop=loop, executor=executor))        
-        
+                     functools.partial(wrap_active_test, test=grpc_iterator.is_active, loop=loop, executor=executor))
+
     def __aiter__(self):
         return self
-    
+
     def _next(self):
         if self._iterator is None:
             raise StopAsyncIteration
@@ -134,6 +139,17 @@ class WrappedIterator(object):
             if self._iterator is None:
                 raise StopAsyncIteration
             self._next_future = self._loop.run_in_executor(self._stream_executor, self._next)
+
+            def cb(fut):
+                try:
+                    fut.result()
+                except (StopAsyncIteration, StopIteration):
+                    pass
+                except grpc.RpcError as ex:
+                    if ex.code() != grpc.StatusCode.CANCELLED:
+                        logger.exception("__anext__ grpc exception")
+
+            self._next_future.add_done_callback(cb)
         try:
             return await asyncio.shield(self._next_future)
         finally:
@@ -162,7 +178,7 @@ class IteratorScope(object):
 
     async def __aenter__(self):
         return self._iter
-    
+
     async def __aexit__(self, exc_val, exc_typ, exc_tb):
         await self._iter.aclose()
 
@@ -209,7 +225,7 @@ class WrappedAsyncIterator(object):
             self._q.put((None, True))
         except Exception as exc:
             self._q.put((exc, True))
-        
+
     def __next__(self):
         if self._async_iter is None:
             raise StopIteration
@@ -227,7 +243,7 @@ class WrappedAsyncIterator(object):
                 raise r
         else:
             return r
-    
+
     def close(self):
         if self._async_iter is not None:
             async def async_close():
